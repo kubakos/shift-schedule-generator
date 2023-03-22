@@ -1,1 +1,1 @@
-# shift_schedule_generator
+# shift-schedule-generator
