@@ -2,4 +2,4 @@
 from generator import ScheduleGenerator
 
 if __name__ == '__main__':
-    ScheduleGenerator('template.xls').export()
+    ScheduleGenerator('template.xlsx').export()
