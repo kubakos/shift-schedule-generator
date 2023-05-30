@@ -1,5 +1,8 @@
 # Shift Schedule Generator
 
+Dependencies:
+    - pandas
+
 
 1. schedule generator
     - INIT df from imported excel schedule

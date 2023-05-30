@@ -7,7 +7,7 @@ class ScheduleGenerator():
 
     def __init__(self, excel_path):
         # INIT df from imported excel schedule
-        head = [datetime.now().strftime('%B')]
+        head = []
         for i in range(1, 32):
             for j in range(2):
                 if j == 0:
