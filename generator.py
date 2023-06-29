@@ -1,4 +1,5 @@
 from datetime import datetime
+import itertools
 import pandas as pd
 import rules
 
@@ -6,33 +7,39 @@ import rules
 class ScheduleGenerator():
 
     def __init__(self, excel_path):
-        # INIT df from imported excel schedule
-        head = [i for i in range(1, 63)]
+        self.workers_count_by_shift = 4
+        head = [i for i in range(1, 32)]
         self.managers_df = pd.read_excel(
-            excel_path, index_col=None, names=head, sheet_name='managers')
-        self.managers_df = self.managers_df.fillna(' ')
+            excel_path, names=head, sheet_name='managers')
+        self.managers_df = self.managers_df.fillna(" ")
         self.technicians_df = pd.read_excel(
             excel_path, index_col=None, names=head, sheet_name='technicians')
-        self.technicians_df = self.technicians_df.fillna(' ')
-        self.shift_length = {'H': 0, 'NM': 11, 'EM': 11, 'SZ': 8, 'B': 8}
+        self.technicians_df = self.technicians_df.fillna(" ")
+        self.groups = self.all_combinations_per_shift()
+
+    def all_combinations_per_shift(self):
+        workers = [self.technicians_df.index[i][0]
+                   for i in range(len(self.technicians_df.index))]
+
+        args = set()
+
+        for i in range(4):
+            args.add(set(workers))
+
+        print(args)
+        # for combination in itertools.product(*args):
+        #     print(combination)
 
     def generate(self):
-        # GENERATE schedule by given rules
-        tmp_df = 0
-        shifts = ['NM', 'EM']
-        counter = []
+        schedule = []
+        for day in range(1, 32):
+            NM = rules.primary(day, self.groups)
+            EM = rules.primary(day, self.groups)
+            schedule.append([NM, EM])
 
-        for days in self.managers_df.columns:
-            counter.append(days)
-            for managers in self.managers_df.index[:4]:
-                if days % 2 == 0:
-                    pass
-
-    def rate(self):
-        pass
+        print(len(schedule))
 
     def export(self):
-        # EXPORT generated df to an excel file
         file_name = str(datetime.now())[
             :-10].replace(':', '-').replace(' ', '_') + '.xlsx'
         with pd.ExcelWriter(file_name) as writer:
